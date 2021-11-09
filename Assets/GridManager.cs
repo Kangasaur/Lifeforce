@@ -60,8 +60,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void GenerateGrid()
+    public void GenerateGrid()
     {
+        foreach (GameObject oldTile in GameObject.FindGameObjectsWithTag("Tile")) Destroy(oldTile);
         landNum = 0;
         int tries = 0;
         while ((GridRatio(landNum) < targetLandmass - targetError || GridRatio(landNum) > targetLandmass + targetError) && tries < 100)
@@ -79,9 +80,7 @@ public class GridManager : MonoBehaviour
             }
             
         }
-        Debug.Log(tries);
-        Debug.Log(GridRatio(landNum));
-
+        if (tries == 100) Debug.Log("failed");
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
@@ -114,5 +113,11 @@ public class GridManager : MonoBehaviour
     float GridRatio(float number)
     {
         return number / (gridWidth * gridHeight);
+    }
+
+    public void SetLandmass(float number)
+    {
+        targetLandmass = number;
+        seaLevel = Mathf.Clamp(1 - number, 0.35f, 0.5f);
     }
 }
